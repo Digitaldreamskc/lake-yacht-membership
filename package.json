@@ -74,7 +74,6 @@
     "typescript": "5.2.2",
     "vaul": "^0.9.9",
     "zod": "^3.23.8"
-  }
 }
 "devDependencies": {
   "@babel/plugin-proposal-class-properties": "^7.18.6",
