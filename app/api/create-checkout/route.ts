@@ -14,22 +14,27 @@ const stripe = new Stripe(stripeSecretKey, {
 const MEMBERSHIP_TIERS: Record<string, { name: string; amount: number; description: string }> = {
   Standard: {
     name: 'Standard Membership',
-    amount: 15000,
-    description: 'Basic yacht club membership with facility access'
+    amount: 15000, // $150
+    description: 'Full access to club facilities and events'
+  },
+  Family: {
+    name: 'Family Membership',
+    amount: 15000, // $150 - matches your UI
+    description: 'Perfect for families who love the water'
   },
   Premium: {
     name: 'Premium Membership',
-    amount: 30000,
-    description: 'Includes extended guest access and event invitations'
+    amount: 15000, // $150 - changed from 30000 to match your UI
+    description: 'Enhanced experience with premium amenities'
   },
   Elite: {
     name: 'Elite Membership',
-    amount: 50000,
+    amount: 50000, // $500
     description: 'Top-tier access with exclusive privileges and concierge services'
   },
   Lifetime: {
     name: 'Lifetime Membership',
-    amount: 100000,
+    amount: 100000, // $1000
     description: 'One-time fee for permanent access and VIP benefits'
   }
 }
@@ -37,7 +42,7 @@ const MEMBERSHIP_TIERS: Record<string, { name: string; amount: number; descripti
 export async function POST(req: Request) {
   try {
     const { tierType, userEmail, walletAddress } = await req.json()
-
+    
     // ✅ Validate input types
     if (
       typeof tierType !== 'string' ||
@@ -49,7 +54,7 @@ export async function POST(req: Request) {
         { status: 400 }
       )
     }
-
+    
     // ✅ Check tier validity
     const tier = MEMBERSHIP_TIERS[tierType]
     if (!tier) {
@@ -58,7 +63,7 @@ export async function POST(req: Request) {
         { status: 400 }
       )
     }
-
+    
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL
     if (!baseUrl) {
       return NextResponse.json(
@@ -66,7 +71,7 @@ export async function POST(req: Request) {
         { status: 500 }
       )
     }
-
+    
     // ✅ Create checkout session
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
@@ -96,7 +101,7 @@ export async function POST(req: Request) {
         wallet: walletAddress
       }
     })
-
+    
     return NextResponse.json({ url: session.url })
   } catch (error: any) {
     console.error('[CREATE_CHECKOUT_ERROR]', error)
