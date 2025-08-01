@@ -12,7 +12,7 @@ export function ConfirmPurchaseButton({ tier }: { tier: string }) {
   const handlePurchase = async () => {
     setLoading(true)
     try {
-      const res = await fetch('/api/checkout', {
+      const res = await fetch('/api/create-checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
