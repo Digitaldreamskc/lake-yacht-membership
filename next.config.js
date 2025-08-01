@@ -3,14 +3,17 @@ const nextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
-  images: { unoptimized: true },
-  swcMinify: false, // Still okay to keep this off
-  experimental: {
-    forceSwcTransforms: false,
-    esmExternals: false,
+  images: {
+    unoptimized: true,
   },
-  // ✅ Remove the webpack override block
+  swcMinify: true, // ✅ Turn this ON — Terser issues often come from old Webpack+Terser combo, not SWC
+  experimental: {
+    forceSwcTransforms: true, // ✅ Force SWC for all transforms
+    esmExternals: true,       // ✅ ESM external modules preferred on Vercel
+  },
+  typescript: {
+    ignoreBuildErrors: false,
+  },
 };
 
 module.exports = nextConfig;
-
