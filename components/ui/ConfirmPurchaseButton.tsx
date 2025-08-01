@@ -3,7 +3,7 @@
 
 import { useState } from 'react'
 import { usePrivy } from '@privy-io/react-auth'
-import { toast } from '@/components/ui/use-toast'
+import { toast } from '@/hooks/use-toast'
 
 export function ConfirmPurchaseButton({ tier }: { tier: string }) {
   const { user } = usePrivy()
