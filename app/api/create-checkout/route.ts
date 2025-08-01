@@ -1,18 +1,73 @@
 import { NextResponse } from 'next/server'
 import Stripe from 'stripe'
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+const stripeSecretKey = process.env.STRIPE_SECRET_KEY
+
+if (!stripeSecretKey) {
+  throw new Error('Missing STRIPE_SECRET_KEY in environment')
+}
+
+const stripe = new Stripe(stripeSecretKey, {
   apiVersion: '2025-07-30.basil'
 })
+
+const MEMBERSHIP_TIERS: Record<string, { name: string; amount: number; description: string }> = {
+  Standard: {
+    name: 'Standard Membership',
+    amount: 15000,
+    description: 'Basic yacht club membership with facility access'
+  },
+  Premium: {
+    name: 'Premium Membership',
+    amount: 30000,
+    description: 'Includes extended guest access and event invitations'
+  },
+  Elite: {
+    name: 'Elite Membership',
+    amount: 50000,
+    description: 'Top-tier access with exclusive privileges and concierge services'
+  },
+  Lifetime: {
+    name: 'Lifetime Membership',
+    amount: 100000,
+    description: 'One-time fee for permanent access and VIP benefits'
+  }
+}
 
 export async function POST(req: Request) {
   try {
     const { tierType, userEmail, walletAddress } = await req.json()
 
-    if (!tierType || !userEmail || !walletAddress) {
-      return NextResponse.json({ error: 'Missing required fields' }, { status: 400 })
+    // ✅ Validate input types
+    if (
+      typeof tierType !== 'string' ||
+      typeof userEmail !== 'string' ||
+      typeof walletAddress !== 'string'
+    ) {
+      return NextResponse.json(
+        { error: 'Invalid input. Please check tier, email, and wallet address.' },
+        { status: 400 }
+      )
     }
 
+    // ✅ Check tier validity
+    const tier = MEMBERSHIP_TIERS[tierType]
+    if (!tier) {
+      return NextResponse.json(
+        { error: `Invalid membership tier: "${tierType}"` },
+        { status: 400 }
+      )
+    }
+
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL
+    if (!baseUrl) {
+      return NextResponse.json(
+        { error: 'Missing NEXT_PUBLIC_BASE_URL in environment' },
+        { status: 500 }
+      )
+    }
+
+    // ✅ Create checkout session
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
       line_items: [
@@ -20,16 +75,21 @@ export async function POST(req: Request) {
           price_data: {
             currency: 'usd',
             product_data: {
-              name: `Yacht Club Membership - ${tierType}`,
+              name: tier.name,
+              description: tier.description,
+              images: [
+                'https://images.pexels.com/photos/1007025/pexels-photo-1007025.jpeg?auto=compress&cs=tinysrgb&w=800'
+              ]
             },
-            unit_amount: 15000
+            unit_amount: tier.amount
           },
           quantity: 1
         }
       ],
       mode: 'payment',
-      success_url: `${process.env.NEXT_PUBLIC_BASE_URL}/success?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL}/cancel`,
+      customer_email: userEmail,
+      success_url: `${baseUrl}/success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${baseUrl}/cancel`,
       metadata: {
         tier: tierType,
         email: userEmail,
@@ -38,8 +98,11 @@ export async function POST(req: Request) {
     })
 
     return NextResponse.json({ url: session.url })
-  } catch (err: any) {
-    console.error('[CHECKOUT_ERROR]', err?.message || err)
-    return NextResponse.json({ error: err?.message || 'Checkout failed' }, { status: 500 })
+  } catch (error: any) {
+    console.error('[CREATE_CHECKOUT_ERROR]', error)
+    return NextResponse.json(
+      { error: 'Something went wrong while creating the checkout session. Please try again.' },
+      { status: 500 }
+    )
   }
 }
