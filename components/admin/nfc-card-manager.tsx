@@ -236,7 +236,7 @@ export function NFCCardManager({ onCardLinked }: NFCCardManagerProps) {
                     <div className="flex items-center space-x-3">
                       <div className={`w-3 h-3 rounded-full ${card.isActive ? 'bg-green-500' : 'bg-red-500'}`} />
                       <div>
-                        <p className="font-medium">{card.cardId}</p>
+                        <p className="font-medium">{card.id}</p>
                         <p className="text-sm text-gray-600">
                           {card.cardType} • SN: {card.serialNumber}
                         </p>
