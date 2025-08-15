@@ -13,7 +13,7 @@ const PRICE_ID = process.env.STRIPE_PRICE_ID // optional: use a pre-created Stri
 
 // --- Stripe client ---
 const stripe = new Stripe(STRIPE_SECRET_KEY, {
-    apiVersion: '2024-06-20',
+    apiVersion: '2025-07-30.basil',
 })
 
 type CreateCheckoutBody = {
