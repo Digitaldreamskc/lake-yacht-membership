@@ -57,3 +57,4 @@ async function checkContract() {
 }
 
 checkContract().catch(console.error)
+

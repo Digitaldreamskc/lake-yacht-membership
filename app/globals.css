@@ -2,87 +2,485 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Luxury & Exclusivity Design System */
+
+/* CSS Custom Properties for Luxury Design Language */
 :root {
-    --foreground-rgb: 0, 0, 0;
-    --background-start-rgb: 214, 219, 220;
-    --background-end-rgb: 255, 255, 255;
+  /* Typography Scale - Luxury Refinement */
+  --font-size-hero: 5rem;        /* 80px - Bold, commanding headlines */
+  --font-size-title: 3.5rem;     /* 56px - Section titles */
+  --font-size-subtitle: 1.5rem;  /* 24px - Supporting text */
+  --font-size-body: 1.125rem;    /* 18px - Body text */
+  --font-size-caption: 0.875rem; /* 14px - Small text */
+  
+  /* Luxury Color Palette - Sophisticated & Monochrome */
+  --color-primary: #1a1a1a;      /* Rich black for luxury */
+  --color-primary-light: #2d2d2d; /* Dark gray */
+  --color-accent: #d4af37;       /* Rich gold, not orange */
+  --color-accent-light: #e6c866; /* Lighter gold */
+  --color-neutral-50: #fafafa;   /* Warm white */
+  --color-neutral-100: #f5f5f5;  /* Soft white */
+  --color-neutral-200: #e5e5e5;  /* Very light gray */
+  --color-neutral-300: #d4d4d4;  /* Light gray */
+  --color-neutral-400: #a3a3a3;  /* Medium gray */
+  --color-neutral-500: #737373;  /* Darker gray */
+  --color-neutral-600: #525252;  /* Dark gray */
+  --color-neutral-700: #404040;  /* Darker gray */
+  --color-neutral-800: #262626;  /* Very dark gray */
+  --color-neutral-900: #171717;  /* Almost black */
+  
+  /* Luxury Spacing - Generous & Breathing */
+  --spacing-xs: 16px;    /* 1rem */
+  --spacing-sm: 32px;    /* 2rem */
+  --spacing-md: 48px;    /* 3rem */
+  --spacing-lg: 64px;    /* 4rem */
+  --spacing-xl: 96px;    /* 6rem */
+  --spacing-2xl: 128px;  /* 8rem */
+  --spacing-3xl: 160px;  /* 10rem */
+  --spacing-4xl: 200px;  /* 12.5rem */
+  --spacing-5xl: 240px;  /* 15rem */
+  
+  /* Luxury Shadows - Subtle & Refined */
+  --shadow-none: none;
+  --shadow-subtle: 0px 1px 3px rgba(0,0,0,0.05);
+  --shadow-soft: 0px 4px 12px rgba(0,0,0,0.08);
+  --shadow-medium: 0px 8px 24px rgba(0,0,0,0.12);
+  --shadow-strong: 0px 16px 48px rgba(0,0,0,0.16);
+  
+  /* Border Radius - Minimal & Refined */
+  --border-radius-none: 0px;
+  --border-radius-sm: 4px;
+  --border-radius-md: 8px;
+  --border-radius-lg: 12px;
+  --border-radius-xl: 16px;
+  
+  /* Transitions - Smooth & Elegant */
+  --transition-fast: 0.2s ease-out;
+  --transition-normal: 0.3s ease-out;
+  --transition-slow: 0.5s ease-out;
+  
+  /* Container Max Widths - Generous & Spacious */
+  --container-sm: 640px;
+  --container-md: 768px;
+  --container-lg: 1024px;
+  --container-xl: 1280px;
+  --container-2xl: 1440px;
 }
 
-@media (prefers-color-scheme: dark) {
-    :root {
-        --foreground-rgb: 255, 255, 255;
-        --background-start-rgb: 0, 0, 0;
-        --background-end-rgb: 0, 0, 0;
-    }
-}
-
+/* Base Typography - Luxury Refinement */
 @layer base {
-    body {
-        font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    }
+  * {
+    box-sizing: border-box;
+  }
+  
+  html {
+    font-size: 16px;
+    line-height: 1.4;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    scroll-behavior: smooth;
+  }
+  
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Segoe UI', Roboto, sans-serif;
+    font-weight: 400;
+    color: var(--color-neutral-800);
+    background-color: var(--color-neutral-50);
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+  
+  /* Luxury Typography Hierarchy */
+  h1, .hero-text {
+    font-size: var(--font-size-hero);
+    font-weight: 300;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: var(--color-primary);
+  }
+  
+  h2, .title-text {
+    font-size: var(--font-size-title);
+    font-weight: 300;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    color: var(--color-primary);
+  }
+  
+  h3, .subtitle-text {
+    font-size: var(--font-size-subtitle);
+    font-weight: 400;
+    line-height: 1.4;
+    color: var(--color-neutral-600);
+  }
+  
+  p, .body-text {
+    font-size: var(--font-size-body);
+    font-weight: 400;
+    line-height: 1.6;
+    color: var(--color-neutral-700);
+  }
+  
+  .caption-text {
+    font-size: var(--font-size-caption);
+    font-weight: 400;
+    line-height: 1.4;
+    color: var(--color-neutral-500);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  
+  /* Luxury Link Styling */
+  a {
+    color: var(--color-primary);
+    text-decoration: none;
+    transition: color var(--transition-fast);
+  }
+  
+  a:hover {
+    color: var(--color-accent);
+  }
+  
+  /* Luxury Selection */
+  ::selection {
+    background: var(--color-accent);
+    color: white;
+  }
 }
 
-:root {
-    --background: 0 0% 100%;
-    --foreground: 0 0% 3.9%;
-    --card: 0 0% 100%;
-    --card-foreground: 0 0% 3.9%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 3.9%;
-    --primary: 0 0% 9%;
-    --primary-foreground: 0 0% 98%;
-    --secondary: 0 0% 96.1%;
-    --secondary-foreground: 0 0% 9%;
-    --muted: 0 0% 96.1%;
-    --muted-foreground: 0 0% 45.1%;
-    --accent: 0 0% 96.1%;
-    --accent-foreground: 0 0% 9%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 89.8%;
-    --input: 0 0% 89.8%;
-    --ring: 0 0% 3.9%;
-    --chart-1: 12 76% 61%;
-    --chart-2: 173 58% 39%;
-    --chart-3: 197 37% 24%;
-    --chart-4: 43 74% 66%;
-    --chart-5: 27 87% 67%;
-    --radius: 0.5rem;
+/* Luxury Component Utilities */
+@layer components {
+  /* Premium Container System */
+  .luxury-container {
+    max-width: var(--container-xl);
+    margin: 0 auto;
+    padding: 0 var(--spacing-md);
+  }
+  
+  .luxury-container-wide {
+    max-width: var(--container-2xl);
+    margin: 0 auto;
+    padding: 0 var(--spacing-md);
+  }
+  
+  .luxury-container-narrow {
+    max-width: var(--container-lg);
+    margin: 0 auto;
+    padding: 0 var(--spacing-md);
+  }
+  
+  /* Luxury Spacing Utilities */
+  .luxury-section {
+    padding: var(--spacing-3xl) 0;
+  }
+  
+  .luxury-section-sm {
+    padding: var(--spacing-2xl) 0;
+  }
+  
+  .luxury-section-lg {
+    padding: var(--spacing-4xl) 0;
+  }
+  
+  .luxury-section-xl {
+    padding: var(--spacing-5xl) 0;
+  }
+  
+  /* Luxury Button System - Minimal & Elegant */
+  .luxury-button-primary {
+    background: var(--color-primary);
+    color: white;
+    border: none;
+    padding: 20px 40px;
+    font-size: 1rem;
+    font-weight: 400;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    min-height: 56px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  
+  .luxury-button-primary:hover {
+    background: var(--color-primary-light);
+    transform: translateY(-1px);
+  }
+  
+  .luxury-button-secondary {
+    background: transparent;
+    color: var(--color-primary);
+    border: 1px solid var(--color-primary);
+    padding: 20px 40px;
+    font-size: 1rem;
+    font-weight: 400;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    min-height: 56px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  
+  .luxury-button-secondary:hover {
+    background: var(--color-primary);
+    color: white;
+  }
+  
+  .luxury-button-text {
+    background: transparent;
+    color: var(--color-neutral-600);
+    border: none;
+    padding: 12px 24px;
+    font-size: 0.875rem;
+    font-weight: 400;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  
+  .luxury-button-text:hover {
+    color: var(--color-primary);
+  }
+  
+  /* Luxury Input System */
+  .luxury-input {
+    background: white;
+    border: 1px solid var(--color-neutral-200);
+    padding: 20px 24px;
+    font-size: 1rem;
+    min-height: 56px;
+    transition: all var(--transition-fast);
+    width: 100%;
+    font-weight: 400;
+  }
+  
+  .luxury-input:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(26, 26, 26, 0.1);
+  }
+  
+  .luxury-input:hover {
+    border-color: var(--color-neutral-400);
+  }
+  
+  /* Luxury Divider */
+  .luxury-divider {
+    height: 1px;
+    background: var(--color-neutral-200);
+    margin: var(--spacing-lg) 0;
+    width: 100%;
+  }
+  
+  .luxury-divider-accent {
+    height: 1px;
+    background: var(--color-accent);
+    margin: var(--spacing-lg) 0;
+    width: 60px;
+  }
+  
+  /* Luxury Badge */
+  .luxury-badge {
+    display: inline-block;
+    padding: 8px 16px;
+    font-size: 0.75rem;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--color-neutral-600);
+    border: 1px solid var(--color-neutral-200);
+    background: white;
+  }
+  
+  /* Luxury Status Indicators */
+  .luxury-status {
+    display: inline-flex;
+    align-items: center;
+    padding: 12px 20px;
+    border-radius: var(--border-radius-sm);
+    font-size: 0.875rem;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+  
+  .luxury-status-success {
+    background: var(--color-neutral-100);
+    color: var(--color-neutral-700);
+    border: 1px solid var(--color-neutral-200);
+  }
+  
+  .luxury-status-warning {
+    background: var(--color-neutral-100);
+    color: var(--color-neutral-700);
+    border: 1px solid var(--color-neutral-200);
+  }
+  
+  .luxury-status-error {
+    background: var(--color-neutral-100);
+    color: var(--color-neutral-700);
+    border: 1px solid var(--color-neutral-200);
+  }
 }
 
-.dark {
-    --background: 0 0% 3.9%;
-    --foreground: 0 0% 98%;
-    --card: 0 0% 3.9%;
-    --card-foreground: 0 0% 98%;
-    --popover: 0 0% 3.9%;
-    --popover-foreground: 0 0% 98%;
-    --primary: 0 0% 98%;
-    --primary-foreground: 0 0% 9%;
-    --secondary: 0 0% 14.9%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 0 0% 14.9%;
-    --muted-foreground: 0 0% 63.9%;
-    --accent: 0 0% 14.9%;
-    --accent-foreground: 0 0% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 14.9%;
-    --input: 0 0% 14.9%;
-    --ring: 0 0% 83.1%;
-    --chart-1: 220 70% 50%;
-    --chart-2: 160 60% 45%;
-    --chart-3: 30 80% 55%;
-    --chart-4: 280 65% 60%;
-    --chart-5: 340 75% 55%;
+/* Luxury Animation Utilities */
+@layer utilities {
+  .animate-fade-up {
+    animation: fadeUp 0.8s ease-out forwards;
+  }
+  
+  .animate-fade-in {
+    animation: fadeIn 0.6s ease-out forwards;
+  }
+  
+  .animate-slide-up {
+    animation: slideUp 0.8s ease-out forwards;
+  }
+  
+  /* Staggered Animation Delays */
+  .animate-delay-100 { animation-delay: 0.1s; }
+  .animate-delay-200 { animation-delay: 0.2s; }
+  .animate-delay-300 { animation-delay: 0.3s; }
+  .animate-delay-400 { animation-delay: 0.4s; }
+  .animate-delay-500 { animation-delay: 0.5s; }
+  
+  /* Hover Animations - Subtle & Refined */
+  .hover-lift {
+    transition: transform var(--transition-normal);
+  }
+  
+  .hover-lift:hover {
+    transform: translateY(-2px);
+  }
+  
+  .hover-scale {
+    transition: transform var(--transition-fast);
+  }
+  
+  .hover-scale:hover {
+    transform: scale(1.01);
+  }
+  
+  /* Focus States */
+  .focus-ring {
+    transition: box-shadow var(--transition-fast);
+  }
+  
+  .focus-ring:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(26, 26, 26, 0.1);
+  }
 }
 
-@layer base {
-    * {
-        @apply border-border;
-    }
+/* Luxury Keyframe Animations */
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 
-    body {
-        @apply bg-background text-foreground;
-    }
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Luxury Responsive Breakpoints */
+@media (max-width: 640px) {
+  :root {
+    --font-size-hero: 3.5rem;     /* 56px for mobile */
+    --font-size-title: 2.5rem;    /* 40px for mobile */
+    --spacing-3xl: 96px;          /* Reduce spacing on mobile */
+    --spacing-4xl: 128px;
+    --spacing-5xl: 160px;
+  }
+  
+  .luxury-section {
+    padding: var(--spacing-2xl) 0;
+  }
+  
+  .luxury-section-lg {
+    padding: var(--spacing-3xl) 0;
+  }
+  
+  .luxury-section-xl {
+    padding: var(--spacing-4xl) 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .luxury-container {
+    padding: 0 var(--spacing-sm);
+  }
+}
+
+/* Luxury Focus Management */
+*:focus {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* Luxury Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-neutral-100);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-neutral-300);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-neutral-400);
+}
+
+/* Luxury Print Styles */
+@media print {
+  .luxury-button-primary,
+  .luxury-button-secondary {
+    background: var(--color-neutral-200) !important;
+    color: var(--color-neutral-800) !important;
+    border: 1px solid var(--color-neutral-400) !important;
+  }
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

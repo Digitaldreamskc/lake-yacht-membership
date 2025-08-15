@@ -30,3 +30,4 @@ async function checkContractMainnet() {
 }
 
 checkContractMainnet().catch(console.error)
+
