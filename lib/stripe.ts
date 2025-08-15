@@ -1,68 +1,195 @@
 import Stripe from 'stripe'
+import { z } from 'zod' // Add for runtime type validation
 
-// Use a default test key for development if STRIPE_SECRET_KEY is not set
-const stripeSecretKey = process.env.STRIPE_SECRET_KEY || 'sk_test_51234567890abcdefghijklmnopqrstuvwxyz1234567890abcdefghijklmnopqrstuvwxyz12'
-
-// Use the version that matches the installed Stripe SDK
-export const stripe = new Stripe(stripeSecretKey, {
-  apiVersion: '2025-07-30.basil'
-})
-
-export const MEMBERSHIP_PRICES = {
-  [0]: {
-    amount: 15000,
-    name: 'Standard Membership',
-    description: 'Basic yacht club membership with facility access'
-  },
-  [1]: {
-    amount: 15000,
-    name: 'Premium Membership',
-    description: 'Enhanced membership with additional privileges'
-  },
-  [2]: {
-    amount: 15000,
-    name: 'Elite Membership',
-    description: 'Top-tier membership with exclusive benefits'
-  },
-  [3]: {
-    amount: 15000,
-    name: 'Lifetime Membership',
-    description: 'Permanent membership with all privileges'
-  }
+// Types for membership tiers
+interface MembershipTier {
+    amount: number
+    name: string
+    description: string
+    features: string[]
+    nftMetadata: {
+        name: string
+        description: string
+        image: string
+        external_url?: string
+        attributes: Array<{
+            trait_type: string
+            value: string | number
+        }>
+        nfcCard?: {
+            cardType: string
+            serialNumber?: string
+            linkedAt?: string
+            isActive: boolean
+        }
+    }
 }
 
-export async function createCheckoutSession(
-  tier: number,
-  email: string,
-  successUrl: string,
-  cancelUrl: string
-) {
-  const price = MEMBERSHIP_PRICES[tier as keyof typeof MEMBERSHIP_PRICES]
-  if (!price) throw new Error('Invalid membership tier')
+// Validate environment variables
+const REQUIRED_ENV = {
+    STRIPE_SECRET_KEY: process.env.STRIPE_SECRET_KEY,
+    NFT_CONTRACT_ADDRESS: process.env.NEXT_PUBLIC_CONTRACT_ADDRESS,
+    STRIPE_WEBHOOK_SECRET: process.env.STRIPE_WEBHOOK_SECRET,
+} as const
 
-  const session = await stripe.checkout.sessions.create({
-    payment_method_types: ['card'],
-    line_items: [{
-      price_data: {
-        currency: 'usd',
-        product_data: {
-          name: price.name,
-          description: price.description,
-          images: ['https://images.pexels.com/photos/1007025/pexels-photo-1007025.jpeg?auto=compress&cs=tinysrgb&w=800']
-        },
-        unit_amount: price.amount
-      },
-      quantity: 1
-    }],
-    mode: 'payment',
-    success_url: successUrl,
-    cancel_url: cancelUrl,
-    customer_email: email,
-    metadata: {
-      tier: tier.toString(),
-      email
+// Check for missing environment variables (only in production)
+if (process.env.NODE_ENV === 'production') {
+    Object.entries(REQUIRED_ENV).forEach(([key, value]) => {
+        if (!value) {
+            throw new Error(`Missing ${key} environment variable`)
+        }
+    })
+}
+
+// Initialize Stripe with proper error handling
+export const stripe = process.env.STRIPE_SECRET_KEY 
+    ? new Stripe(process.env.STRIPE_SECRET_KEY, {
+        apiVersion: '2025-07-30.basil',
+        typescript: true,
+      })
+    : null
+
+// Enhanced membership tiers with NFT metadata
+export const MEMBERSHIP_TIERS: Record<number, MembershipTier> = {
+    0: {
+        amount: 15000, // $150.00 in cents
+        name: 'Annual Membership',
+        description: 'Annual yacht club membership with facility access and NFC card support',
+        features: [
+            'Access to club facilities',
+            'Annual membership NFT',
+            'Community events access',
+            'NFC card for physical access',
+        ],
+        nftMetadata: {
+            name: 'LSYC Annual Membership',
+            description: 'Lake Stockton Yacht Club Annual Membership NFT with NFC card support',
+            image: 'ipfs://QmMEMBERSHIP...', // Replace with actual IPFS hash
+            external_url: 'https://lsyc.com/membership',
+            attributes: [
+                { trait_type: 'Tier', value: 'Annual Membership' },
+                { trait_type: 'Year', value: new Date().getFullYear() },
+                { trait_type: 'Price', value: '$150' },
+                { trait_type: 'Validity', value: '1 Year' },
+                { trait_type: 'NFC Card Support', value: 'Yes' },
+                { trait_type: 'Card Type', value: 'Annual Membership' },
+            ],
+            nfcCard: {
+                cardType: 'Annual Membership',
+                isActive: false
+            }
+        }
+    },
+};
+
+// Input validation schema
+const checkoutInputSchema = z.object({
+    tier: z.number().min(0).max(0), // Only tier 0 available
+    email: z.string().email(),
+    walletAddress: z.string().regex(/^0x[a-fA-F0-9]{40}$/),
+    successUrl: z.string().url(),
+    cancelUrl: z.string().url(),
+})
+
+// Enhanced checkout session creation
+export async function createCheckoutSession({
+    tier,
+    email,
+    walletAddress,
+    successUrl,
+    cancelUrl,
+}: {
+    tier: number
+    email: string
+    walletAddress: string
+    successUrl: string
+    cancelUrl: string
+}) {
+    try {
+        // Validate inputs
+        const validated = checkoutInputSchema.parse({
+            tier,
+            email,
+            walletAddress,
+            successUrl,
+            cancelUrl,
+        })
+
+        const membershipTier = MEMBERSHIP_TIERS[validated.tier]
+        if (!membershipTier) {
+            throw new Error('Invalid membership tier')
+        }
+
+        // Create or retrieve product
+        const product = await stripe.products.create({
+            name: membershipTier.name,
+            description: membershipTier.description,
+            images: ['https://images.pexels.com/photos/1007025/pexels-photo-1007025.jpeg?auto=compress&cs=tinysrgb&w=800'],
+            metadata: {
+                tier: validated.tier.toString(),
+                contractAddress: REQUIRED_ENV.NFT_CONTRACT_ADDRESS,
+                nftMetadata: JSON.stringify(membershipTier.nftMetadata),
+                features: JSON.stringify(membershipTier.features),
+            },
+        })
+
+        // Create checkout session
+        const session = await stripe.checkout.sessions.create({
+            payment_method_types: ['card'],
+            line_items: [{
+                price_data: {
+                    currency: 'usd',
+                    product: product.id,
+                    unit_amount: membershipTier.amount,
+                },
+                quantity: 1,
+            }],
+            mode: 'payment',
+            success_url: validated.successUrl,
+            cancel_url: validated.cancelUrl,
+            customer_email: validated.email,
+            metadata: {
+                tier: validated.tier.toString(),
+                email: validated.email,
+                walletAddress: validated.walletAddress,
+                contractAddress: REQUIRED_ENV.NFT_CONTRACT_ADDRESS,
+                nftMetadata: JSON.stringify(membershipTier.nftMetadata),
+            },
+            payment_intent_data: {
+                metadata: {
+                    tier: validated.tier.toString(),
+                    walletAddress: validated.walletAddress,
+                    nftMetadata: JSON.stringify(membershipTier.nftMetadata),
+                },
+            },
+        })
+
+        return {
+            sessionId: session.id,
+            url: session.url,
+            tier: validated.tier,
+            nftMetadata: membershipTier.nftMetadata,
+        }
+    } catch (error) {
+        if (error instanceof z.ZodError) {
+            throw new Error(`Invalid input: ${error.errors.map(e => e.message).join(', ')}`)
+        }
+        if (error instanceof Stripe.errors.StripeError) {
+            throw new Error(`Payment error: ${error.message}`)
+        }
+        throw error
     }
-  })
+}
 
-  return session
+// Helper function to verify webhook signatures
+export async function verifyStripeWebhook(payload: string, signature: string) {
+    try {
+        return stripe.webhooks.constructEvent(
+            payload,
+            signature,
+            REQUIRED_ENV.STRIPE_WEBHOOK_SECRET
+        )
+    } catch (err) {
+        throw new Error(`Webhook signature verification failed: ${err instanceof Error ? err.message : 'Unknown error'}`)
+    }
 }

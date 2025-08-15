@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { StatsCards } from "@/components/admin/stats-cards"
 import { ManualMintDialog } from "@/components/admin/manual-mint-dialog"
 import { MembershipCard } from "@/components/membership-card"
+import { NFCCardManager } from "@/components/admin/nfc-card-manager"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { MembershipData } from "@/lib/types"
 import { Anchor, Settings } from "lucide-react"
@@ -97,8 +98,9 @@ export default function AdminDashboard() {
         />
 
         <Tabs defaultValue="members" className="mt-8">
-          <TabsList className="grid w-full grid-cols-3">
+          <TabsList className="grid w-full grid-cols-4">
             <TabsTrigger value="members">Members</TabsTrigger>
+            <TabsTrigger value="nfc-cards">NFC Cards</TabsTrigger>
             <TabsTrigger value="analytics">Analytics</TabsTrigger>
             <TabsTrigger value="settings">Settings</TabsTrigger>
           </TabsList>
@@ -122,6 +124,13 @@ export default function AdminDashboard() {
                 )}
               </CardContent>
             </Card>
+          </TabsContent>
+          
+          <TabsContent value="nfc-cards" className="mt-6">
+            <NFCCardManager onCardLinked={(cardData) => {
+              console.log('NFC card linked:', cardData)
+              // TODO: Update UI or refresh data
+            }} />
           </TabsContent>
           
           <TabsContent value="analytics" className="mt-6">

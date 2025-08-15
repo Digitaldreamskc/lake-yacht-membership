@@ -27,6 +27,9 @@ export interface PaymentSession {
   status: 'pending' | 'completed' | 'failed'
   walletAddress?: string
   tokenId?: number
+  metadata?: string
+  tokenURI?: string
+  completedAt?: string
   createdAt: Date
   updatedAt: Date
 }
