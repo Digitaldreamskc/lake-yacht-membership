@@ -106,7 +106,7 @@ export function MemberPortal({ className }: MemberPortalProps) {
         address: YACHT_CLUB_CONTRACT.address,
         abi: YACHT_CLUB_CONTRACT.abi,
         functionName: 'isMember',
-        args: [user.wallet.address]
+        args: [user.wallet.address as `0x${string}`]
       })
 
       if (isMember) {
@@ -115,7 +115,7 @@ export function MemberPortal({ className }: MemberPortalProps) {
           address: YACHT_CLUB_CONTRACT.address,
           abi: YACHT_CLUB_CONTRACT.abi,
           functionName: 'getTokenIdByMember',
-          args: [user.wallet.address]
+          args: [user.wallet.address as `0x${string}`]
         })
 
         // Get member info
