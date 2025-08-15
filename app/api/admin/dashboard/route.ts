@@ -6,15 +6,15 @@ export async function GET() {
   try {
     // Get all completed payment sessions
     const sessions = await db.getAllSessions()
-    const completedSessions = sessions.filter(s => s.status === 'completed')
+    const completedSessions = sessions.filter((s: any) => s.status === 'completed')
     
     // Calculate stats
     const totalMembers = completedSessions.length
-    const totalRevenue = completedSessions.reduce((sum, session) => sum + session.amount, 0) / 100 // Convert from cents
+    const totalRevenue = completedSessions.reduce((sum: number, session: any) => sum + session.amount, 0) / 100 // Convert from cents
     const activeMembers = completedSessions.length // For demo, assume all are active
     
     // Mock membership data for demo
-    const memberships = completedSessions.map(session => ({
+    const memberships = completedSessions.map((session: any) => ({
       tokenId: session.tokenId || 1,
       owner: session.walletAddress || '0x1234...5678',
       memberInfo: {
