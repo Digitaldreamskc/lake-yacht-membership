@@ -82,6 +82,14 @@ export const MEMBERSHIP_TIERS: Record<number, MembershipTier> = {
     },
 };
 
+// Export membership prices for admin routes
+export const MEMBERSHIP_PRICES: Record<number, { amount: number; name: string }> = {
+    0: {
+        amount: 15000, // $150.00 in cents
+        name: 'Annual Membership'
+    }
+};
+
 // Input validation schema
 const checkoutInputSchema = z.object({
     tier: z.number().min(0).max(0), // Only tier 0 available
