@@ -40,7 +40,7 @@ export function NFCCardVerifier() {
     try {
       // Create public client for contract interaction
       const publicClient = createPublicClient({
-        chain: base,
+        chain: baseSepolia,
         transport: http()
       })
 
