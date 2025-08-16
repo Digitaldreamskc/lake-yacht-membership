@@ -25,16 +25,13 @@ export async function POST(request: NextRequest) {
     const mockTokenId = Math.floor(Math.random() * 10000) + 1
     const price = MEMBERSHIP_PRICES[tier as keyof typeof MEMBERSHIP_PRICES]
 
-    await db.savePaymentSession({
+    await db.createPaymentSession({
       sessionId: mockSessionId,
       email,
       tier,
-      amount: price.amount,
       status: 'completed',
       walletAddress,
-      tokenId: mockTokenId,
-      createdAt: new Date(),
-      updatedAt: new Date()
+      tokenId: mockTokenId
     })
 
     return NextResponse.json({
