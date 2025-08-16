@@ -1,5 +1,5 @@
 // scripts/check-contract.ts
-import { createPublicClient, http, getContract } from 'viem'
+import { createPublicClient, http } from 'viem'
 import { baseSepolia } from 'viem/chains'
 import { YACHT_CLUB_CONTRACT } from '../lib/contracts'
 
@@ -11,11 +11,7 @@ async function checkContract() {
         transport: http()
     })
     
-    const contract = getContract({
-        address: YACHT_CLUB_CONTRACT.address,
-        abi: YACHT_CLUB_CONTRACT.abi,
-        publicClient
-    })
+
     
     try {
         // Check if contract exists
@@ -29,7 +25,11 @@ async function checkContract() {
         
         // Check total supply
         try {
-            const totalSupply = await contract.read.totalSupply()
+            const totalSupply = await publicClient.readContract({
+                address: YACHT_CLUB_CONTRACT.address,
+                abi: YACHT_CLUB_CONTRACT.abi,
+                functionName: 'totalSupply'
+            })
             console.log('📊 Total supply:', totalSupply.toString())
         } catch (err) {
             console.log('❌ totalSupply failed:', err)
@@ -37,7 +37,12 @@ async function checkContract() {
         
         // Check if we can read the contract
         try {
-            const isMember = await contract.read.isMember(['0x0000000000000000000000000000000000000000'])
+            const isMember = await publicClient.readContract({
+                address: YACHT_CLUB_CONTRACT.address,
+                abi: YACHT_CLUB_CONTRACT.abi,
+                functionName: 'isMember',
+                args: ['0x0000000000000000000000000000000000000000']
+            })
             console.log('👤 isMember test:', isMember)
         } catch (err) {
             console.log('❌ isMember failed:', err)
@@ -45,7 +50,11 @@ async function checkContract() {
         
         // Check contract owner
         try {
-            const owner = await contract.read.owner()
+            const owner = await publicClient.readContract({
+                address: YACHT_CLUB_CONTRACT.address,
+                abi: YACHT_CLUB_CONTRACT.abi,
+                functionName: 'owner'
+            })
             console.log('👑 Contract owner:', owner)
         } catch (err) {
             console.log('❌ owner() failed:', err)
