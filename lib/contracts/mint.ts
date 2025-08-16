@@ -38,7 +38,7 @@ export async function mintMembershipClient(
       address: YACHT_CLUB_CONTRACT.address,
       abi: YACHT_CLUB_CONTRACT.abi,
       functionName: 'mintMembership',
-      args: [params.to, params.tier, params.email, params.tokenURI],
+      args: [params.to as `0x${string}`, params.tier, params.email, params.tokenURI],
       account: wallet.address as `0x${string}`
     })
 
@@ -118,7 +118,7 @@ export async function mintMembershipServer(
   }
 
   // Ensure private key is properly formatted for Viem
-  const formattedPrivateKey = privateKey.startsWith('0x') ? privateKey : `0x${privateKey}` as `0x${string}`
+  const formattedPrivateKey = (privateKey.startsWith('0x') ? privateKey : `0x${privateKey}`) as `0x${string}`
   
   const account = privateKeyToAccount(formattedPrivateKey)
   
@@ -141,7 +141,7 @@ export async function mintMembershipServer(
       address: YACHT_CLUB_CONTRACT.address,
       abi: YACHT_CLUB_CONTRACT.abi,
       functionName: 'mintMembership',
-      args: [params.to, params.tier, params.email, params.tokenURI],
+      args: [params.to as `0x${string}`, params.tier, params.email, params.tokenURI],
       account
     })
 
@@ -149,7 +149,7 @@ export async function mintMembershipServer(
       address: YACHT_CLUB_CONTRACT.address,
       abi: YACHT_CLUB_CONTRACT.abi,
       functionName: 'mintMembership',
-      args: [params.to, params.tier, params.email, params.tokenURI]
+      args: [params.to as `0x${string}`, params.tier, params.email, params.tokenURI]
     })
 
     logger.info('Server mint transaction sent', { txHash })
@@ -217,7 +217,7 @@ export async function checkMemberStatus(address: string): Promise<boolean> {
       address: YACHT_CLUB_CONTRACT.address,
       abi: YACHT_CLUB_CONTRACT.abi,
       functionName: 'isMember',
-      args: [address]
+      args: [address as `0x${string}`]
     })
 
     return isMember as boolean
@@ -248,7 +248,7 @@ export async function checkTokenExists(walletAddress: string): Promise<bigint | 
     })
 
     // If tokenId is 0, it means no token exists for this member
-    if (tokenId === 0n) {
+    if (tokenId === BigInt(0)) {
       logger.info('No existing membership token found for wallet', { walletAddress })
       return null
     }
