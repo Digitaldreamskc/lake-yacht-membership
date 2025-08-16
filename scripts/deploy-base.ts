@@ -1,4 +1,4 @@
-import { ethers } from "hardhat";
+import { ethers } from "@nomicfoundation/hardhat-ethers";
 import { config } from "../lib/config";
 
 async function main() {

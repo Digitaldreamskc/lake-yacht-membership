@@ -1,4 +1,4 @@
-import { ethers } from "hardhat";
+import { ethers } from "@nomicfoundation/hardhat-ethers";
 
 async function main() {
   console.log("🚀 Deploying YachtClubMembership contract to Base Sepolia testnet...");
