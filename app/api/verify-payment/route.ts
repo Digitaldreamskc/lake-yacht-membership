@@ -104,10 +104,10 @@ async function handleVerify(sessionId: string) {
                 // Save to database as completed
                 await db.updatePaymentSession(sessionId, {
                     status: 'completed',
-                    tokenId: existingTokenId.toString(),
+                    tokenId: Number(existingTokenId),
                     walletAddress,
                     email,
-                    tier: tierStr,
+                    tier: Number(tierStr),
                     completedAt: new Date().toISOString(),
                     metadata: JSON.stringify(metadata),
                     tokenURI,
@@ -115,9 +115,9 @@ async function handleVerify(sessionId: string) {
 
                 return NextResponse.json({
                     status: 'completed',
-                    tokenId: existingTokenId.toString(),
+                    tokenId: Number(existingTokenId),
                     walletAddress,
-                    tier: tierStr,
+                    tier: Number(tierStr),
                     email,
                     metadata,
                     tokenURI,
@@ -143,7 +143,7 @@ async function handleVerify(sessionId: string) {
                 walletAddress: again.walletAddress,
                 tier: again.tier,
                 email: again.email,
-                metadata: again.metadata ? JSON.parse(existing.metadata) : null,
+                metadata: again.metadata ? JSON.parse(again.metadata) : null,
                 tokenURI: again.tokenURI,
             })
         }
@@ -204,10 +204,10 @@ async function handleVerify(sessionId: string) {
         console.log('💾 Updating database with completion status...')
         await db.updatePaymentSession(sessionId, {
             status: 'completed',
-            tokenId,
+            tokenId: Number(tokenId),
             walletAddress,
             email,
-            tier: String(params.tier),
+            tier: params.tier,
             completedAt: new Date().toISOString(),
             metadata: JSON.stringify(metadata),
             tokenURI,
@@ -218,7 +218,7 @@ async function handleVerify(sessionId: string) {
             status: 'completed',
             tokenId,
             walletAddress,
-            tier: String(params.tier),
+            tier: params.tier,
             email,
             metadata,
             tokenURI,
