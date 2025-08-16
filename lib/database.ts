@@ -34,7 +34,34 @@ interface MintRecord {
 const paymentSessions: Map<string, PaymentSession> = new Map()
 const mintRecords: Map<string, MintRecord> = new Map()
 
-export const db = {
+// Define the database interface to avoid circular references
+interface DatabaseInterface {
+    getPaymentSession(sessionId: string): Promise<PaymentSession | null>
+    createPaymentSession(data: Omit<PaymentSession, 'id' | 'createdAt' | 'updatedAt'>): Promise<PaymentSession>
+    updatePaymentSession(sessionId: string, updates: Partial<PaymentSession>): Promise<PaymentSession | null>
+    getMintRecord(sessionId: string): Promise<MintRecord | null>
+    createMintRecord(data: Omit<MintRecord, 'id' | 'createdAt' | 'updatedAt'>): Promise<MintRecord>
+    updateMintRecord(sessionId: string, updates: Partial<MintRecord>): Promise<MintRecord | null>
+    transaction<T>(callback: (trx: DatabaseInterface) => Promise<T>): Promise<T>
+    mintRecords: {
+        findUnique: (params: { where: { sessionId: string } }) => Promise<MintRecord | null>
+        upsert: (params: {
+            where: { sessionId: string }
+            create: Omit<MintRecord, 'id' | 'createdAt' | 'updatedAt'>
+            update: Partial<MintRecord>
+        }) => Promise<MintRecord>
+        update: (params: {
+            where: { sessionId: string }
+            data: Partial<MintRecord>
+        }) => Promise<MintRecord>
+        updateMany: (params: {
+            where: { paymentIntentId: string }
+            data: Partial<MintRecord>
+        }) => Promise<{ count: number }>
+    }
+}
+
+export const db: DatabaseInterface = {
     // Payment Session methods
     async getPaymentSession(sessionId: string): Promise<PaymentSession | null> {
         return paymentSessions.get(sessionId) || null
@@ -94,7 +121,7 @@ export const db = {
     },
 
     // Transaction method (simplified for mock)
-    async transaction<T>(callback: (trx: typeof db) => Promise<T>): Promise<T> {
+    async transaction<T>(callback: (trx: DatabaseInterface) => Promise<T>): Promise<T> {
         return callback(this)
     },
 
