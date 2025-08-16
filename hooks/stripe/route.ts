@@ -4,6 +4,7 @@ import { db } from '@/lib/database'
 import { headers } from 'next/headers'
 import { mintMembershipServer } from '@/lib/contracts/mint'
 import { logger } from '@/lib/logger'
+import Stripe from 'stripe'
 
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!
 
