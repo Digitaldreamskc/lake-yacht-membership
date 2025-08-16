@@ -63,7 +63,7 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
         const walletAddress = session.metadata?.walletAddress || ''
         const email = session.metadata?.email || ''
 
-        const paymentSession = await db.transaction(async (trx) => {
+        const paymentSession = await db.transaction(async (trx: typeof db) => {
             const existing = await trx.getPaymentSession(session.id)
             if (existing && existing.status === 'completed') return existing
 
