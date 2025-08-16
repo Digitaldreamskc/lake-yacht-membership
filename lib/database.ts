@@ -39,6 +39,7 @@ interface DatabaseInterface {
     getPaymentSession(sessionId: string): Promise<PaymentSession | null>
     createPaymentSession(data: Omit<PaymentSession, 'id' | 'createdAt' | 'updatedAt'>): Promise<PaymentSession>
     updatePaymentSession(sessionId: string, updates: Partial<PaymentSession>): Promise<PaymentSession | null>
+    getAllSessions(): Promise<PaymentSession[]>
     getMintRecord(sessionId: string): Promise<MintRecord | null>
     createMintRecord(data: Omit<MintRecord, 'id' | 'createdAt' | 'updatedAt'>): Promise<MintRecord>
     updateMintRecord(sessionId: string, updates: Partial<MintRecord>): Promise<MintRecord | null>
@@ -89,6 +90,10 @@ export const db: DatabaseInterface = {
         }
         paymentSessions.set(sessionId, updated)
         return updated
+    },
+
+    async getAllSessions(): Promise<PaymentSession[]> {
+        return Array.from(paymentSessions.values())
     },
 
     // Mint Record methods  
