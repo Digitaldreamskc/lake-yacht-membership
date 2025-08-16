@@ -46,16 +46,17 @@ async function checkContract() {
             console.log('❌ isMember failed:', err)
         }
         
-        // Check authorized minter instead of owner
+        // Check NFC card functionality instead of authorizedMinter
         try {
-            const authorizedMinter = await publicClient.readContract({
+            const nfcCardInfo = await publicClient.readContract({
                 address: YACHT_CLUB_CONTRACT.address,
                 abi: YACHT_CLUB_CONTRACT.abi,
-                functionName: 'authorizedMinter'
+                functionName: 'getNFCCardInfo',
+                args: ['test-card-123']
             })
-            console.log('🔑 Authorized minter:', authorizedMinter)
+            console.log('🔑 NFC Card info test:', nfcCardInfo)
         } catch (err) {
-            console.log('❌ authorizedMinter failed:', err)
+            console.log('❌ getNFCCardInfo failed:', err)
         }
         
     } catch (err) {
