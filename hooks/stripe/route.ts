@@ -78,10 +78,10 @@ async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
             // Store/update in DB
             return await trx.updatePaymentSession(session.id, {
                 status: 'completed',
-                tokenId,
+                tokenId: Number(tokenId),
                 walletAddress,
                 email,
-                tier,
+                tier: parseInt(tier),
                 completedAt: new Date().toISOString()
             })
         })
