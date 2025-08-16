@@ -112,7 +112,7 @@ export function useStaggeredAnimation(
         if (entry.isIntersecting) {
           items.forEach((_, index) => {
             setTimeout(() => {
-              setVisibleItems(prev => new Set([...prev, index]))
+              setVisibleItems(prev => new Set(Array.from(prev).concat(index)))
             }, index * delay)
           })
         }
