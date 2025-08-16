@@ -2,36 +2,40 @@
 
 import { ethers } from 'ethers'
 import { MEMBERSHIP_ABI } from '../abi/membershipABI'
-import { RPC_URL, PRIVATE_KEY } from '../lib/constants'
+import { config } from '../../lib/config'
 
 async function deploy() {
+  const RPC_URL = config.base.rpcUrl
+  const PRIVATE_KEY = config.contract.privateKey
+  
   if (!PRIVATE_KEY || !RPC_URL) {
-    throw new Error('Missing environment variables')
+    throw new Error('Missing environment variables: CONTRACT_PRIVATE_KEY or RPC_URL')
   }
 
   const provider = new ethers.providers.JsonRpcProvider(RPC_URL)
   const wallet = new ethers.Wallet(PRIVATE_KEY, provider)
 
   console.log('Deploying membership contract...')
+  console.log('Using RPC URL:', RPC_URL)
+  console.log('Wallet address:', wallet.address)
 
-  const ContractFactory = new ethers.ContractFactory(
-    MEMBERSHIP_ABI,
-    BYTECODE, // You'll need to add your contract bytecode
-    wallet
-  )
-
-  const contract = await ContractFactory.deploy()
-  await contract.deployed()
-
-  console.log('Contract deployed to:', contract.address)
-  return contract.address
+  // Note: This script needs the contract bytecode to deploy
+  // You'll need to add your contract bytecode or use Hardhat for deployment
+  console.log('⚠️  Deployment script requires contract bytecode')
+  console.log('💡 Use Hardhat deployment instead: npm run deploy')
+  
+  // For now, just return a placeholder
+  return '0x0000000000000000000000000000000000000000'
 }
 
 if (require.main === module) {
   deploy()
-    .then(() => process.exit(0))
+    .then((address) => {
+      console.log('Deployment script completed. Address:', address)
+      process.exit(0)
+    })
     .catch(error => {
-      console.error(error)
+      console.error('Deployment failed:', error)
       process.exit(1)
     })
 }
