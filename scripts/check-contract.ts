@@ -11,8 +11,6 @@ async function checkContract() {
         transport: http()
     })
     
-
-    
     try {
         // Check if contract exists
         const code = await publicClient.getBytecode({ address: YACHT_CLUB_CONTRACT.address })
@@ -48,16 +46,16 @@ async function checkContract() {
             console.log('❌ isMember failed:', err)
         }
         
-        // Check contract owner
+        // Check authorized minter instead of owner
         try {
-            const owner = await publicClient.readContract({
+            const authorizedMinter = await publicClient.readContract({
                 address: YACHT_CLUB_CONTRACT.address,
                 abi: YACHT_CLUB_CONTRACT.abi,
-                functionName: 'owner'
+                functionName: 'authorizedMinter'
             })
-            console.log('👑 Contract owner:', owner)
+            console.log('🔑 Authorized minter:', authorizedMinter)
         } catch (err) {
-            console.log('❌ owner() failed:', err)
+            console.log('❌ authorizedMinter failed:', err)
         }
         
     } catch (err) {
