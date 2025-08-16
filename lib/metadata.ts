@@ -82,11 +82,11 @@ export function generateMembershipMetadata(params: MembershipMetadataParams): NF
     baseMetadata.attributes.push({ trait_type: 'Guest Privileges', value: 'Yes' })
   }
   
-  if (tier.benefits.includes('VIP facilities')) {
+  if (tier.benefits.includes('VIP event access')) {
     baseMetadata.attributes.push({ trait_type: 'VIP Access', value: 'Yes' })
   }
   
-  if (tier.benefits.includes('Special events')) {
+  if (tier.benefits.includes('Exclusive member events')) {
     baseMetadata.attributes.push({ trait_type: 'Special Events', value: 'Yes' })
   }
   

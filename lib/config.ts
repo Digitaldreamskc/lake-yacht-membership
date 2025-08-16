@@ -54,9 +54,27 @@ export const config = {
   membershipTiers: {
     0: {
       id: 0,
-      name: 'Annual Membership',
+      name: 'Standard',
       price: 150, // $150
-      benefits: ['Club access', 'Facility access', 'Community events', 'NFC card support'],
+      benefits: ['Club access', 'Facility access', 'Community events', 'NFC card support', 'Basic member events', 'Standard support'],
+    },
+    1: {
+      id: 1,
+      name: 'Premium',
+      price: 300, // $300
+      benefits: ['Club access', 'Facility access', 'Community events', 'NFC card support', 'Priority event access', 'Guest privileges', 'Premium support'],
+    },
+    2: {
+      id: 2,
+      name: 'Elite',
+      price: 500, // $500
+      benefits: ['Club access', 'Facility access', 'Community events', 'NFC card support', 'Priority event access', 'Guest privileges', 'VIP event access', 'Concierge service', 'Exclusive member events'],
+    },
+    3: {
+      id: 3,
+      name: 'Lifetime',
+      price: 2000, // $2000
+      benefits: ['Club access', 'Facility access', 'Community events', 'NFC card support', 'Priority event access', 'Guest privileges', 'VIP event access', 'Concierge service', 'Exclusive member events', 'Lifetime access', 'Priority reservations', 'Founding member status'],
     },
   },
   
