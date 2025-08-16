@@ -14,8 +14,7 @@ async function checkContract() {
     const contract = getContract({
         address: YACHT_CLUB_CONTRACT.address,
         abi: YACHT_CLUB_CONTRACT.abi,
-        publicClient
-    })
+    }, publicClient)
     
     try {
         // Check if contract exists
