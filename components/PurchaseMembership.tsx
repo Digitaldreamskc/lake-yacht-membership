@@ -11,7 +11,6 @@ export function PurchaseMembership() {
     isLoading,
     activeWallet,
     login,
-    connectWallet,
     checkAuthState
   } = usePrivyAuth()
   const [purchaseLoading, setPurchaseLoading] = useState(false)
@@ -70,7 +69,7 @@ export function PurchaseMembership() {
   if (!activeWallet?.address) {
     return (
       <button
-        onClick={() => connectWallet()}
+        onClick={() => login()}
         className="btn btn-primary"
       >
         Connect Wallet to Purchase
