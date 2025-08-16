@@ -1,6 +1,8 @@
 // scripts/contract/deploy.ts
 
-import { ethers } from 'ethers'
+import { createWalletClient, http, createPublicClient } from 'viem'
+import { privateKeyToAccount } from 'viem/accounts'
+import { baseSepolia } from 'viem/chains'
 import { MEMBERSHIP_ABI } from '../abi/membershipABI'
 import { config } from '../../lib/config'
 
@@ -12,12 +14,22 @@ async function deploy() {
     throw new Error('Missing environment variables: CONTRACT_PRIVATE_KEY or RPC_URL')
   }
 
-  const provider = new ethers.providers.JsonRpcProvider(RPC_URL)
-  const wallet = new ethers.Wallet(PRIVATE_KEY, provider)
+  // Create viem clients
+  const publicClient = createPublicClient({
+    chain: baseSepolia,
+    transport: http(RPC_URL)
+  })
+
+  const account = privateKeyToAccount(PRIVATE_KEY as `0x${string}`)
+  const walletClient = createWalletClient({
+    account,
+    chain: baseSepolia,
+    transport: http(RPC_URL)
+  })
 
   console.log('Deploying membership contract...')
   console.log('Using RPC URL:', RPC_URL)
-  console.log('Wallet address:', wallet.address)
+  console.log('Wallet address:', account.address)
 
   // Note: This script needs the contract bytecode to deploy
   // You'll need to add your contract bytecode or use Hardhat for deployment
