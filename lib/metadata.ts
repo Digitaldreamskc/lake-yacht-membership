@@ -78,19 +78,19 @@ export function generateMembershipMetadata(params: MembershipMetadataParams): NF
   }
 
   // Add tier-specific attributes
-  if (tier.benefits.includes('Guest privileges')) {
+  if (tier.benefits.some(benefit => benefit.includes('Guest privileges'))) {
     baseMetadata.attributes.push({ trait_type: 'Guest Privileges', value: 'Yes' })
   }
   
-  if (tier.benefits.includes('VIP event access')) {
+  if (tier.benefits.some(benefit => benefit.includes('VIP'))) {
     baseMetadata.attributes.push({ trait_type: 'VIP Access', value: 'Yes' })
   }
   
-  if (tier.benefits.includes('Exclusive member events')) {
+  if (tier.benefits.some(benefit => benefit.includes('Exclusive'))) {
     baseMetadata.attributes.push({ trait_type: 'Special Events', value: 'Yes' })
   }
   
-  if (tier.benefits.includes('Lifetime access')) {
+  if (tier.benefits.some(benefit => benefit.includes('Lifetime'))) {
     baseMetadata.attributes.push({ trait_type: 'Validity', value: 'Lifetime' })
   }
 
