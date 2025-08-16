@@ -32,8 +32,8 @@ const REQUIRED_ENV = {
     STRIPE_WEBHOOK_SECRET: process.env.STRIPE_WEBHOOK_SECRET,
 } as const
 
-// Check for missing environment variables (only in production)
-if (process.env.NODE_ENV === 'production') {
+// Check for missing environment variables (only in production and runtime, not during build)
+if (process.env.NODE_ENV === 'production' && typeof window === 'undefined' && process.env.NEXT_PHASE !== 'phase-production-build') {
     Object.entries(REQUIRED_ENV).forEach(([key, value]) => {
         if (!value) {
             throw new Error(`Missing ${key} environment variable`)
