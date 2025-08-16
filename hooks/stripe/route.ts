@@ -10,6 +10,12 @@ const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!
 
 export async function POST(request: NextRequest) {
     try {
+        // Check if stripe client is available
+        if (!stripe) {
+            logger.error('Stripe client not initialized')
+            return NextResponse.json({ error: 'Stripe not configured' }, { status: 500 })
+        }
+
         const body = await request.text()
         const signature = headers().get('stripe-signature')!
 

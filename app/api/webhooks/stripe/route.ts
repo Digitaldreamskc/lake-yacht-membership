@@ -5,7 +5,7 @@ import Stripe from 'stripe'
 
 // Use your existing Stripe helper if you have one; otherwise create a client here:
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-    // Let Stripe use your default account API version
+    apiVersion: '2025-07-30.basil'
 })
 
 /**

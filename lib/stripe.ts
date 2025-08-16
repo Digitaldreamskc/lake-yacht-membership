@@ -47,7 +47,13 @@ export const stripe = process.env.STRIPE_SECRET_KEY
         apiVersion: '2025-07-30.basil',
         typescript: true,
       })
-    : null
+    : (() => {
+        if (process.env.NODE_ENV === 'production') {
+          throw new Error('STRIPE_SECRET_KEY is required in production')
+        }
+        // Return a mock stripe client for development
+        return null
+      })()
 
 // Enhanced membership tiers with NFT metadata
 export const MEMBERSHIP_TIERS: Record<number, MembershipTier> = {
@@ -114,6 +120,11 @@ export async function createCheckoutSession({
     cancelUrl: string
 }) {
     try {
+        // Check if stripe client is available
+        if (!stripe) {
+            throw new Error('Stripe client not initialized. Please check your STRIPE_SECRET_KEY environment variable.')
+        }
+
         // Validate inputs
         const validated = checkoutInputSchema.parse({
             tier,
@@ -135,7 +146,7 @@ export async function createCheckoutSession({
             images: ['https://images.pexels.com/photos/1007025/pexels-photo-1007025.jpeg?auto=compress&cs=tinysrgb&w=800'],
             metadata: {
                 tier: validated.tier.toString(),
-                contractAddress: REQUIRED_ENV.NFT_CONTRACT_ADDRESS,
+                contractAddress: REQUIRED_ENV.NFT_CONTRACT_ADDRESS || '',
                 nftMetadata: JSON.stringify(membershipTier.nftMetadata),
                 features: JSON.stringify(membershipTier.features),
             },
@@ -160,7 +171,7 @@ export async function createCheckoutSession({
                 tier: validated.tier.toString(),
                 email: validated.email,
                 walletAddress: validated.walletAddress,
-                contractAddress: REQUIRED_ENV.NFT_CONTRACT_ADDRESS,
+                contractAddress: REQUIRED_ENV.NFT_CONTRACT_ADDRESS || '',
                 nftMetadata: JSON.stringify(membershipTier.nftMetadata),
             },
             payment_intent_data: {
@@ -192,6 +203,12 @@ export async function createCheckoutSession({
 // Helper function to verify webhook signatures
 export async function verifyStripeWebhook(payload: string, signature: string) {
     try {
+        if (!stripe) {
+            throw new Error('Stripe client not initialized')
+        }
+        if (!REQUIRED_ENV.STRIPE_WEBHOOK_SECRET) {
+            throw new Error('STRIPE_WEBHOOK_SECRET is not set')
+        }
         return stripe.webhooks.constructEvent(
             payload,
             signature,
