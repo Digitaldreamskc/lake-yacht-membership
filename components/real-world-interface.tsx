@@ -150,7 +150,7 @@ export function RealWorldInterface() {
                     <div>
                       <p className="font-medium">Wallet Address</p>
                       <p className="text-sm text-gray-600 font-mono">
-                        {user.wallet?.address}
+                        {user?.wallet?.address}
                       </p>
                     </div>
                     <Badge variant="outline">Connected</Badge>
