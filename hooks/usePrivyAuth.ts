@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 
 export function usePrivyAuth() {
   const { user, authenticated, ready, login } = usePrivy()
-  const { wallets, connectWallet } = useWallets()
+  const { wallets } = useWallets()
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
@@ -41,7 +41,6 @@ export function usePrivyAuth() {
     error,
     login,
     activeWallet,
-    connectWallet,
     checkAuthState,
   }
 }
