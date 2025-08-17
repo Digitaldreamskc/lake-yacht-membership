@@ -8,13 +8,20 @@
     "start": "next start",
     "lint": "next lint",
     "deploy": "ts-node scripts/contract/deploy.ts",
-    "verify": "ts-node scripts/contract/verify.ts"
+    "verify": "ts-node scripts/contract/verify.ts",
+    "hardhat:compile": "hardhat compile",
+    "hardhat:test": "hardhat test",
+    "hardhat:test:gas": "REPORT_GAS=true hardhat test",
+    "hardhat:deploy:local": "hardhat run deploy/01_deploy_erc6551_account_factory.ts --network hardhat",
+    "hardhat:deploy:base": "hardhat run deploy/02_deploy_to_base.ts --network base",
+    "hardhat:deploy:base-sepolia": "hardhat run deploy/03_deploy_to_base_sepolia.ts --network baseSepolia"
   },
   "dependencies": {
     "@heroicons/react": "^2.2.0",
     "@hookform/resolvers": "^3.9.0",
     "@next/swc-wasm-nodejs": "^15.4.4",
     "@openzeppelin/contracts": "^5.4.0",
+    "@openzeppelin/contracts-upgradeable": "^5.4.0",
     "@privy-io/react-auth": "^2.21.2",
     "@privy-io/server-auth": "^1.28.8",
     "@radix-ui/react-accordion": "^1.2.0",
@@ -78,12 +85,23 @@
     "typescript": "5.2.2",
     "vaul": "^0.9.9",
     "viem": "^2.33.3",
-    "zod": "^3.25.76"
+    "zod": "^3.25.76",
+    "@story-protocol/protocol-core": "https://github.com/storyprotocol/protocol-core-v1",
+    "@story-protocol/protocol-periphery": "https://github.com/storyprotocol/protocol-periphery-v1",
+    "erc6551": "^0.0.1",
+    "solady": "^0.0.78"
   },
-  "type": "commonjs",
+  "type": "module",
   "devDependencies": {
     "@nomicfoundation/hardhat-toolbox": "^6.1.0",
+    "@openzeppelin/hardhat-upgrades": "^4.0.0",
+    "@nomicfoundation/hardhat-chai-matchers": "^3.0.0",
     "@typechain/ethers-v6": "^0.5.1",
-    "@typechain/hardhat": "^9.1.0"
+    "@typechain/hardhat": "^9.1.0",
+    "hardhat-gas-reporter": "^1.0.10",
+    "solidity-coverage": "^0.8.5",
+    "dotenv": "^16.4.5",
+    "ds-test": "https://github.com/dapphub/ds-test",
+    "forge-std": "github:foundry-rs/forge-std#v1.7.6"
   }
 }
