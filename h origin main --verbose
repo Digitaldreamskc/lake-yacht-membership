@@ -1,0 +1,5 @@
+[33mcbdd2c0[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m    fix: resolve all dependency version conflicts for Netlify build
+[33m258120f[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m fix: resolve Netlify build failures and dependency conflicts
+[33ma9ade07[m Fix checkout + success flow with Stripe and NFC membership
+[33mf3cb4fa[m Fix checkout + success flow with Stripe and NFC membership
+[33me8a76f4[m Fix environment variable check: prevent errors during build time
