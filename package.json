@@ -15,7 +15,7 @@
     "hardhat:deploy:local": "hardhat run deploy/01_deploy_erc6551_account_factory.ts --network hardhat",
     "hardhat:deploy:base": "hardhat run deploy/02_deploy_to_base.ts --network base",
     "hardhat:deploy:base-sepolia": "hardhat run deploy/03_deploy_to_base_sepolia.ts --network baseSepolia",
-    "postinstall": "npx tsc --version"
+    "prebuild": "npx tsc --version"
   },
   "dependencies": {
     "@heroicons/react": "^2.2.0",
@@ -80,9 +80,13 @@
     "tailwind-merge": "^2.5.2",
     "tailwindcss": "3.3.3",
     "tailwindcss-animate": "^1.0.7",
+    "typescript": "5.4.0",
     "vaul": "^0.9.9",
     "viem": "^2.33.3",
     "zod": "^3.25.76",
+    "@types/node": "20.11.0",
+    "@types/react": "18.2.22",
+    "@types/react-dom": "18.2.7",
     "@story-protocol/protocol-core": "https://github.com/storyprotocol/protocol-core-v1",
     "@story-protocol/protocol-periphery": "https://github.com/storyprotocol/protocol-periphery-v1",
     "erc6551": "^0.0.1",
@@ -103,10 +107,6 @@
     "solidity-coverage": "^0.8.5",
     "dotenv": "^16.4.5",
     "ds-test": "https://github.com/dapphub/ds-test",
-    "forge-std": "github:foundry-rs/forge-std#v1.7.6",
-    "typescript": "5.4.0",
-    "@types/node": "20.11.0",
-    "@types/react": "18.2.22",
-    "@types/react-dom": "18.2.7"
+    "forge-std": "github:foundry-rs/forge-std#v1.7.6"
   }
 }
