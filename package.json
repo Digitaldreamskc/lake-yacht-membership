@@ -90,14 +90,7 @@
     "@story-protocol/protocol-core": "https://github.com/storyprotocol/protocol-core-v1",
     "@story-protocol/protocol-periphery": "https://github.com/storyprotocol/protocol-periphery-v1",
     "erc6551": "^0.0.1",
-    "solady": "^0.0.78"
-  },
-  "type": "module",
-  "engines": {
-    "node": ">=20.11.0 <21.0.0",
-    "npm": ">=9.0.0"
-  },
-  "devDependencies": {
+    "solady": "^0.0.78",
     "@nomicfoundation/hardhat-toolbox": "^6.1.0",
     "@openzeppelin/hardhat-upgrades": "^3.0.0",
     "@nomicfoundation/hardhat-chai-matchers": "^2.1.0",
@@ -108,5 +101,12 @@
     "dotenv": "^16.4.5",
     "ds-test": "https://github.com/dapphub/ds-test",
     "forge-std": "github:foundry-rs/forge-std#v1.7.6"
+  },
+  "type": "module",
+  "engines": {
+    "node": ">=20.11.0 <21.0.0",
+    "npm": ">=9.0.0"
+  },
+  "devDependencies": {
   }
 }
