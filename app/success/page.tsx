@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button'
 import { CheckCircle, Anchor, ExternalLink } from 'lucide-react'
 import { LoadingSpinner } from '@/components/ui/loading-spinner'
 import Confetti from 'react-confetti'
-import { useWindowSize } from 'react-use'
+// import { useWindowSize } from 'react-use'
 
 type VerifyResponse =
     | { status: 'pending'; reason?: string }
@@ -24,7 +24,23 @@ export default function SuccessPage() {
         walletAddress: string
         email?: string
     }>(null)
-    const { width, height } = useWindowSize()
+    const [windowSize, setWindowSize] = useState({ width: 800, height: 600 })
+
+    useEffect(() => {
+        // Simple window size implementation
+        const updateSize = () => {
+            setWindowSize({
+                width: window.innerWidth,
+                height: window.innerHeight
+            })
+        }
+        
+        updateSize()
+        window.addEventListener('resize', updateSize)
+        return () => window.removeEventListener('resize', updateSize)
+    }, [])
+
+    const { width, height } = windowSize
 
     useEffect(() => {
         if (!sessionId) {
