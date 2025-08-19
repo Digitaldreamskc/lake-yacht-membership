@@ -3,6 +3,8 @@ const nextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
+  // Removed output: 'export' - needed for API routes and server-side functionality
+  // Removed trailingSlash: true - can cause issues with API routes
   images: {
     unoptimized: true,
   },
@@ -14,25 +16,20 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: false,
   },
-  async headers() {
-    return [
-      {
-        source: "/(.*)",
-        headers: [
-          {
-            key: "Content-Security-Policy",
-            value:
-              "default-src 'self'; " +
-              "script-src 'self' https://js.stripe.com https://explorer-api.walletconnect.com https://cdn.walletconnect.com https://unpkg.com; " +
-              "connect-src 'self' https://api.privy.io https://auth.privy.io https://explorer-api.walletconnect.com https://pulse.walletconnect.org https://api.web3modal.org https://cdn.walletconnect.com https://relay.walletconnect.org https://relay.walletconnect.com; " +
-              "frame-src 'self' https://js.stripe.com https://hooks.stripe.com https://auth.privy.io https://console.privy.io; " +
-              "font-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com; " +
-              "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; " +
-              "img-src 'self' data: https:;"
-          }
-        ],
-      },
-    ];
+  webpack: (config, { isServer }) => {
+    // Exclude contracts directory from Next.js build
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      'hardhat': false,
+    };
+    
+    // Exclude contracts directory from webpack processing
+    config.module.rules.push({
+      test: /\.ts$/,
+      exclude: /contracts/,
+    });
+    
+    return config;
   },
 };
 
