@@ -7,7 +7,11 @@ export const runtime = 'nodejs' // ensure Node.js runtime for Stripe SDK
 // --- Env setup ---
 const STRIPE_SECRET_KEY = process.env.STRIPE_SECRET_KEY
 if (!STRIPE_SECRET_KEY) {
-    throw new Error('STRIPE_SECRET_KEY is not set in environment variables.')
+    console.error('STRIPE_SECRET_KEY is not set in environment variables.')
+    return NextResponse.json(
+        { error: 'Stripe configuration error. Please contact support.' },
+        { status: 500 }
+    )
 }
 const PRICE_ID = process.env.STRIPE_PRICE_ID // optional: use a pre-created Stripe Price
 
@@ -26,16 +30,39 @@ type CreateCheckoutBody = {
 export async function POST(req: Request) {
     try {
         const body = (await req.json()) as CreateCheckoutBody | null
+        
+        if (!body) {
+            return NextResponse.json(
+                { error: 'Request body is required' },
+                { status: 400 }
+            )
+        }
+
         const walletAddress = body?.walletAddress ?? ''
         const userEmail = body?.userEmail ?? ''
         const tierType = body?.tierType ?? 'Standard'
+
+        // Validate required fields
+        if (!walletAddress) {
+            return NextResponse.json(
+                { error: 'Wallet address is required' },
+                { status: 400 }
+            )
+        }
+
+        if (!userEmail) {
+            return NextResponse.json(
+                { error: 'User email is required' },
+                { status: 400 }
+            )
+        }
 
         // One tier only: $150 USD
         const TIER_NUMBER = 1
         const PRODUCT_NAME = 'LSYC Yacht Club Membership'
         const UNIT_AMOUNT = 15000 // $150.00 in cents
 
-        // Build absolute redirect URLs
+        // Build absolute redirect URLs with fallbacks
         const { origin } = new URL(req.url)
         const baseUrl = process.env.NEXT_PUBLIC_APP_URL || origin
 
@@ -61,9 +88,9 @@ export async function POST(req: Request) {
                     },
                 ],
 
-            customer_email: userEmail || undefined,
+            customer_email: userEmail,
             success_url: `${baseUrl}/success?session_id={CHECKOUT_SESSION_ID}`,
-            cancel_url: `${baseUrl}/cancel`,
+            cancel_url: `${baseUrl}/`, // Redirect to home page instead of non-existent cancel page
 
             // ✅ Make sure these land in your webhook for minting
             metadata: {
@@ -84,11 +111,41 @@ export async function POST(req: Request) {
             },
         })
 
-        return NextResponse.json({ id: session.id, url: session.url }, { status: 200 })
+        console.log('✅ Stripe checkout session created successfully:', {
+            sessionId: session.id,
+            walletAddress,
+            userEmail,
+            tierType
+        })
+
+        return NextResponse.json({ 
+            id: session.id, 
+            url: session.url 
+        }, { status: 200 })
+
     } catch (err: any) {
-        console.error('Stripe Checkout create error:', err)
+        console.error('❌ Stripe Checkout create error:', err)
+        
+        // Handle Stripe-specific errors
+        if (err.type === 'StripeCardError') {
+            return NextResponse.json(
+                { error: 'Your card was declined.' },
+                { status: 400 }
+            )
+        } else if (err.type === 'StripeInvalidRequestError') {
+            return NextResponse.json(
+                { error: 'Invalid payment information.' },
+                { status: 400 }
+            )
+        } else if (err.type === 'StripeAPIError') {
+            return NextResponse.json(
+                { error: 'Payment service temporarily unavailable. Please try again.' },
+                { status: 503 }
+            )
+        }
+
         return NextResponse.json(
-            { error: { message: err?.message ?? 'Unable to create checkout session.' } },
+            { error: 'Unable to create checkout session. Please try again.' },
             { status: 500 }
         )
     }

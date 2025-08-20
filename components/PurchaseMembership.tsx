@@ -24,25 +24,25 @@ export function PurchaseMembership() {
       // This will throw appropriate errors if auth state is invalid
       const { user, wallet } = checkAuthState()
 
-      const response = await fetch('/api/create-checkout-session', {
+      const response = await fetch('/api/create-checkout', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           walletAddress: wallet.address,
-          email: user.email?.address,
+          userEmail: user.email?.address,
           // other checkout data
         }),
       })
 
       if (!response.ok) {
         const error = await response.json()
-        throw new Error(error.message || 'Failed to create checkout session')
+        throw new Error(error.error || 'Failed to create checkout session')
       }
 
-      const { sessionUrl } = await response.json()
-      window.location.href = sessionUrl
+      const { url } = await response.json()
+      window.location.href = url
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred')
       console.error('Purchase error:', err)
