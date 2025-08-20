@@ -10,6 +10,13 @@
 [[plugins]]
   package = "@netlify/plugin-nextjs"
 
+# API routes must go to Netlify functions, not static HTML
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/:splat"
+  status = 200
+
+# Static fallback for SPA routing
 [[redirects]]
   from = "/*"
   to = "/index.html"
