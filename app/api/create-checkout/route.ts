@@ -8,8 +8,12 @@ export const runtime = 'nodejs' // ensure Node.js runtime for Stripe SDK
 const STRIPE_SECRET_KEY = process.env.STRIPE_SECRET_KEY
 const PRICE_ID = process.env.STRIPE_PRICE_ID // optional: use a pre-created Stripe Price
 
+if (!STRIPE_SECRET_KEY) {
+  throw new Error('❌ STRIPE_SECRET_KEY not defined in environment')
+}
+
 // --- Stripe client ---
-const stripe = new Stripe(STRIPE_SECRET_KEY || '', {
+const stripe = new Stripe(STRIPE_SECRET_KEY, {
     apiVersion: '2025-07-30.basil',
     typescript: true,
 })
@@ -31,15 +35,6 @@ type CreateCheckoutBody = {
 
 export async function POST(req: Request) {
     try {
-        // Check Stripe configuration first
-        if (!STRIPE_SECRET_KEY) {
-            console.error('❌ STRIPE_SECRET_KEY is not set in environment variables.')
-            return NextResponse.json(
-                { error: 'Stripe configuration error. Please contact support.' },
-                { status: 500 }
-            )
-        }
-
         const body = (await req.json()) as CreateCheckoutBody | null
         
         if (!body) {
@@ -135,7 +130,12 @@ export async function POST(req: Request) {
         }, { status: 200 })
 
     } catch (err: any) {
-        console.error('❌ Stripe Checkout create error:', err)
+        console.error('❌ Stripe Checkout create error:', {
+            message: err.message,
+            type: err.type,
+            stack: err.stack,
+            raw: err,
+        })
         
         // Handle Stripe-specific errors
         if (err.type === 'StripeCardError') {
