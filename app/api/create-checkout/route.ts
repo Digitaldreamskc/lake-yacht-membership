@@ -6,19 +6,21 @@ export const runtime = 'nodejs' // ensure Node.js runtime for Stripe SDK
 
 // --- Env setup ---
 const STRIPE_SECRET_KEY = process.env.STRIPE_SECRET_KEY
-if (!STRIPE_SECRET_KEY) {
-    console.error('STRIPE_SECRET_KEY is not set in environment variables.')
-    return NextResponse.json(
-        { error: 'Stripe configuration error. Please contact support.' },
-        { status: 500 }
-    )
-}
 const PRICE_ID = process.env.STRIPE_PRICE_ID // optional: use a pre-created Stripe Price
 
 // --- Stripe client ---
-const stripe = new Stripe(STRIPE_SECRET_KEY, {
+const stripe = new Stripe(STRIPE_SECRET_KEY || '', {
     apiVersion: '2025-07-30.basil',
+    typescript: true,
 })
+
+// Log environment awareness during development
+if (process.env.NODE_ENV !== 'production') {
+    console.log('🧪 Stripe config:', {
+        keySet: !!STRIPE_SECRET_KEY,
+        priceId: PRICE_ID || '(inline)',
+    });
+}
 
 type CreateCheckoutBody = {
     walletAddress?: string
@@ -29,6 +31,15 @@ type CreateCheckoutBody = {
 
 export async function POST(req: Request) {
     try {
+        // Check Stripe configuration first
+        if (!STRIPE_SECRET_KEY) {
+            console.error('❌ STRIPE_SECRET_KEY is not set in environment variables.')
+            return NextResponse.json(
+                { error: 'Stripe configuration error. Please contact support.' },
+                { status: 500 }
+            )
+        }
+
         const body = (await req.json()) as CreateCheckoutBody | null
         
         if (!body) {
@@ -135,7 +146,7 @@ export async function POST(req: Request) {
         } else if (err.type === 'StripeInvalidRequestError') {
             return NextResponse.json(
                 { error: 'Invalid payment information.' },
-                { status: 400 }
+                { status: 500 }
             )
         } else if (err.type === 'StripeAPIError') {
             return NextResponse.json(
