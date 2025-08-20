@@ -1,0 +1,5 @@
+[33m4ff3e15[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m Fix Netlify deployment: Update publish directory to .next, upgrade Node.js to 20.18.0, add Next.js plugin
+[33m6138a36[m Remove problematic calendar component and clean up build issues - ready for deployment
+[33m52e7cd7[m Fix build issue: Replace react-use useWindowSize with custom implementation to resolve prerendering errors
+[33m143967d[m Fix Next.js configuration for LSYC system - Remove output export to enable API routes and server-side functionality
+[33m90e9f6b[m Fix Netlify deployment: resolve module system conflicts and remove sharp dependency requirement
