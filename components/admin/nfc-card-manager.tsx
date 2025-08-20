@@ -175,7 +175,7 @@ export function NFCCardManager({ onCardLinked }: NFCCardManagerProps) {
               <Label htmlFor="cardType">Card Type</Label>
               <Select
                 value={newCard.cardType}
-                onValueChange={(value) => setNewCard(prev => ({ ...prev, cardType: value }))}
+                onValueChange={(value: string) => setNewCard(prev => ({ ...prev, cardType: value }))}
               >
                 <SelectTrigger>
                   <SelectValue />

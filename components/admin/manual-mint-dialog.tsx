@@ -79,7 +79,7 @@ export function ManualMintDialog({ onMint }: ManualMintDialogProps) {
             <Label htmlFor="tier">Membership Tier</Label>
             <Select
               value={formData.tier}
-              onValueChange={(value) => setFormData(prev => ({ ...prev, tier: value }))}
+              onValueChange={(value: string) => setFormData(prev => ({ ...prev, tier: value }))}
             >
               <SelectTrigger>
                 <SelectValue />
