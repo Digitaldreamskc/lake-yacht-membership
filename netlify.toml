@@ -9,9 +9,3 @@
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
-
-# Content Security Policy headers to fix Privy and WalletConnect issues
-[[headers]]
-  for = "/*"
-  [headers.values]
-  Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline' https://js.stripe.com https://*.privy.io; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self'; connect-src 'self' https://*.stripe.com https://*.privy.io https://sepolia.base.org https://explorer-api.walletconnect.com https://rpc.walletconnect.com https://infragrid.v.network; frame-src 'self' https://js.stripe.com https://hooks.stripe.com https://auth.privy.io; object-src 'none'; base-uri 'self'; form-action 'self' https://api.stripe.com https://hooks.stripe.com; frame-ancestors 'self';"
