@@ -7,15 +7,21 @@ interface PrivyWrapperProps {
 }
 
 export function PrivyWrapper({ children }: PrivyWrapperProps) {
+  const privyAppId = process.env.NEXT_PUBLIC_PRIVY_APP_ID!
+  
   return (
     <PrivyProvider
-      appId={process.env.NEXT_PUBLIC_PRIVY_APP_ID!}
+      appId={privyAppId}
       config={{
-        loginMethods: ['email', 'wallet'],
         appearance: {
-          accentColor: '#1a1a1a',
-          showWalletLoginFirst: true,
+          theme: 'light',
+          accentColor: '#676FFF',
         },
+        embeddedWallets: {
+          createOnLogin: 'users-without-wallets',
+        },
+        loginMethods: ['email'],
+        requireUserWallet: true, // 🔥 required to ensure wallet is attached
       }}
     >
       {children}

@@ -39,6 +39,10 @@ export function PurchaseButton({ tier, className }: Props) {
             })
 
             if (!userEmail || !walletAddress) {
+                if (!walletAddress) {
+                    await login(); // retry login to reconnect wallet
+                    return alert("We couldn't detect your wallet. Please reconnect and try again.");
+                }
                 alert("We couldn't read your email or wallet from Privy. Please ensure you're logged in correctly.")
                 return
             }
