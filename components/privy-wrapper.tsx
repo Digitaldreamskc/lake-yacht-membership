@@ -21,7 +21,6 @@ export function PrivyWrapper({ children }: PrivyWrapperProps) {
           createOnLogin: 'users-without-wallets',
         },
         loginMethods: ['email'],
-        requireUserWallet: true, // 🔥 required to ensure wallet is attached
       }}
     >
       {children}
